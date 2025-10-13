@@ -1,0 +1,509 @@
+{
+  "agrocadenas": [
+    {
+      "id_agrocadena": "AC001",
+      "nombre": "Agrocadena de Café",
+      "etapas": [
+        {
+          "id_etapa": "E_AC001_01",
+          "nombre": "Cultivo/Producción",
+          "participante": {
+            "id_participante": "P0001",
+            "nombre": "ASO-Café Premium",
+            "direccion": "Corregimiento La Virginia, Montería, Córdoba",
+            "telefono": "323-901-1166",
+            "tipo_documento": "CC",
+            "identificacion": "14199586",
+            "tipo_participante": "Asociación de Productores",
+            "estado": "Activo"
+          },
+          "fecha_inicio_simulada": "2025-05-02T06:00:00Z",
+          "fecha_fin_simulada": "2025-10-29T14:50:00Z",
+          "duracion_estimada_dias": 180,
+          "duracion_real_horas": 4328.8,
+          "justificacion_retraso": "Ninguna"
+        },
+        {
+          "id_etapa": "E_AC001_02",
+          "nombre": "Post-Cosecha/Recolección",
+          "participante": {
+            "id_participante": "P0002",
+            "nombre": "COOP-Café Premium",
+            "direccion": "Sector La Macarena, Florencia, Caquetá",
+            "telefono": "324-466-7381",
+            "tipo_documento": "NIT",
+            "identificacion": "983224943-5",
+            "tipo_participante": "Cooperativa Agrícola",
+            "estado": "Activo"
+          },
+          "fecha_inicio_simulada": "2025-10-22T06:30:00Z",
+          "fecha_fin_simulada": "2025-11-10T10:17:00Z",
+          "duracion_estimada_dias": 14,
+          "duracion_real_horas": 459.8,
+          "justificacion_retraso": "Retraso en despacho"
+        },
+        {
+          "id_etapa": "E_AC001_03",
+          "nombre": "Transporte/Logística",
+          "participante": {
+            "id_participante": "P0003",
+            "nombre": "Montaña Verde S.A.S.",
+            "direccion": "Barrio San José, Neiva, Huila",
+            "telefono": "316-537-1781",
+            "tipo_documento": "NIT",
+            "identificacion": "814018212-6",
+            "tipo_participante": "Empresa de Transporte",
+            "estado": "Activo"
+          },
+          "fecha_inicio_simulada": "2025-09-12T09:30:00Z",
+          "fecha_fin_simulada": "2025-09-14T09:50:00Z",
+          "duracion_estimada_dias": 2,
+          "duracion_real_horas": 48.3,
+          "justificacion_retraso": "Ninguna"
+        },
+        {
+          "id_etapa": "E_AC001_04",
+          "nombre": "Transformación/Procesamiento",
+          "participante": {
+            "id_participante": "P0004",
+            "nombre": "Industria Montaña Verde S.A.",
+            "direccion": "Vía Panamericana Km 8, Popayán, Cauca",
+            "telefono": "301-375-3849",
+            "tipo_documento": "CC",
+            "identificacion": "35357889",
+            "tipo_participante": "Planta Procesadora",
+            "estado": "Activo"
+          },
+          "fecha_inicio_simulada": "2025-05-02T10:00:00Z",
+          "fecha_fin_simulada": "2025-05-09T10:19:00Z",
+          "duracion_estimada_dias": 7,
+          "duracion_real_horas": 168.3,
+          "justificacion_retraso": "Ninguna"
+        },
+        {
+          "id_etapa": "E_AC001_05",
+          "nombre": "Comercialización/Venta",
+          "participante": {
+            "id_participante": "P0005",
+            "nombre": "Tierra Cafetera S.A.S.",
+            "direccion": "Zona Industrial El Bosque, Cartagena, Bolívar",
+            "telefono": "323-272-3383",
+            "tipo_documento": "NIT",
+            "identificacion": "924832954-5",
+            "tipo_participante": "Comercializadora",
+            "estado": "Activo"
+          },
+          "fecha_inicio_simulada": "2025-05-24T07:30:00Z",
+          "fecha_fin_simulada": "2025-06-03T12:13:00Z",
+          "duracion_estimada_dias": 10,
+          "duracion_real_horas": 244.7,
+          "justificacion_retraso": "Ninguna"
+        }
+      ]
+    },
+    {
+      "id_agrocadena": "AC002",
+      "nombre": "Agrocadena de Cacao",
+      "etapas": [
+        {
+          "id_etapa": "E_AC002_01",
+          "nombre": "Cultivo/Producción",
+          "participante": {
+            "id_participante": "P0006",
+            "nombre": "COOP-Chocolate Fino",
+            "direccion": "Sector La Macarena, Florencia, Caquetá",
+            "telefono": "302-403-2402",
+            "tipo_documento": "CC",
+            "identificacion": "24563946",
+            "tipo_participante": "Asociación de Cacaoteros",
+            "estado": "Activo"
+          },
+          "fecha_inicio_simulada": "2025-03-02T07:30:00Z",
+          "fecha_fin_simulada": "2025-08-29T13:35:00Z",
+          "duracion_estimada_dias": 180,
+          "duracion_real_horas": 4326.1,
+          "justificacion_retraso": "Ninguna"
+        },
+        {
+          "id_etapa": "E_AC002_02",
+          "nombre": "Post-Cosecha/Recolección",
+          "participante": {
+            "id_participante": "P0007",
+            "nombre": "Cacao Dorado S.A.S.",
+            "direccion": "Corregimiento La Virginia, Montería, Córdoba",
+            "telefono": "325-201-5337",
+            "tipo_documento": "NIT",
+            "identificacion": "996961287-4",
+            "tipo_participante": "Centro de Acopio",
+            "estado": "Activo"
+          },
+          "fecha_inicio_simulada": "2025-07-21T11:00:00Z",
+          "fecha_fin_simulada": "2025-08-04T19:09:00Z",
+          "duracion_estimada_dias": 14,
+          "duracion_real_horas": 344.1,
+          "justificacion_retraso": "Ninguna"
+        },
+        {
+          "id_etapa": "E_AC002_03",
+          "nombre": "Transporte/Logística",
+          "participante": {
+            "id_participante": "P0008",
+            "nombre": "Theobroma S.A.",
+            "direccion": "Corregimiento La Virginia, Montería, Córdoba",
+            "telefono": "312-568-9326",
+            "tipo_documento": "NIT",
+            "identificacion": "861285498-9",
+            "tipo_participante": "Transportadora Regional",
+            "estado": "Activo"
+          },
+          "fecha_inicio_simulada": "2025-01-24T11:30:00Z",
+          "fecha_fin_simulada": "2025-01-26T16:20:00Z",
+          "duracion_estimada_dias": 2,
+          "duracion_real_horas": 52.8,
+          "justificacion_retraso": "Ninguna"
+        },
+        {
+          "id_etapa": "E_AC002_04",
+          "nombre": "Transformación/Procesamiento",
+          "participante": {
+            "id_participante": "P0009",
+            "nombre": "Industria Cacaoteros S.A.",
+            "direccion": "Plaza de Mercado Central, Ibagué, Tolima",
+            "telefono": "324-598-9538",
+            "tipo_documento": "NIT",
+            "identificacion": "893520910-9",
+            "tipo_participante": "Industria Chocolatera",
+            "estado": "Activo"
+          },
+          "fecha_inicio_simulada": "2025-03-24T08:30:00Z",
+          "fecha_fin_simulada": "2025-03-31T09:32:00Z",
+          "duracion_estimada_dias": 7,
+          "duracion_real_horas": 169.0,
+          "justificacion_retraso": "Ninguna"
+        },
+        {
+          "id_etapa": "E_AC002_05",
+          "nombre": "Comercialización/Venta",
+          "participante": {
+            "id_participante": "P0010",
+            "nombre": "Cacaoteros Ltda.",
+            "direccion": "Corregimiento La Virginia, Montería, Córdoba",
+            "telefono": "301-794-2469",
+            "tipo_documento": "CC",
+            "identificacion": "88665927",
+            "tipo_participante": "Exportadora",
+            "estado": "Inactivo"
+          },
+          "fecha_inicio_simulada": "2025-04-24T07:30:00Z",
+          "fecha_fin_simulada": "2025-05-04T08:46:00Z",
+          "duracion_estimada_dias": 10,
+          "duracion_real_horas": 241.3,
+          "justificacion_retraso": "Ninguna"
+        }
+      ]
+    },
+    {
+      "id_agrocadena": "AC003",
+      "nombre": "Agrocadena de Aguacate",
+      "etapas": [
+        {
+          "id_etapa": "E_AC003_01",
+          "nombre": "Cultivo/Producción",
+          "participante": {
+            "id_participante": "P0011",
+            "nombre": "Hass Colombia Ltda.",
+            "direccion": "Sector La Macarena, Florencia, Caquetá",
+            "telefono": "314-956-7544",
+            "tipo_documento": "CC",
+            "identificacion": "32931158",
+            "tipo_participante": "Finca Productora",
+            "estado": "Inactivo"
+          },
+          "fecha_inicio_simulada": "2025-08-03T07:30:00Z",
+          "fecha_fin_simulada": "2026-01-30T07:59:00Z",
+          "duracion_estimada_dias": 180,
+          "duracion_real_horas": 4320.5,
+          "justificacion_retraso": "Ninguna"
+        },
+        {
+          "id_etapa": "E_AC003_02",
+          "nombre": "Post-Cosecha/Recolección",
+          "participante": {
+            "id_participante": "P0012",
+            "nombre": "Verde Tropical S.A.S.",
+            "direccion": "Zona Industrial El Bosque, Cartagena, Bolívar",
+            "telefono": "321-114-4984",
+            "tipo_documento": "NIT",
+            "identificacion": "809249134-8",
+            "tipo_participante": "Empacadora",
+            "estado": "Inactivo"
+          },
+          "fecha_inicio_simulada": "2025-11-17T07:00:00Z",
+          "fecha_fin_simulada": "2025-12-01T08:48:00Z",
+          "duracion_estimada_dias": 14,
+          "duracion_real_horas": 337.8,
+          "justificacion_retraso": "Ninguna"
+        },
+        {
+          "id_etapa": "E_AC003_03",
+          "nombre": "Transporte/Logística",
+          "participante": {
+            "id_participante": "P0013",
+            "nombre": "Hass Colombia S.A.",
+            "direccion": "Zona Industrial El Bosque, Cartagena, Bolívar",
+            "telefono": "312-667-5336",
+            "tipo_documento": "CC",
+            "identificacion": "74033840",
+            "tipo_participante": "Empresa Logística Especializada",
+            "estado": "Activo"
+          },
+          "fecha_inicio_simulada": "2025-09-16T10:30:00Z",
+          "fecha_fin_simulada": "2025-09-18T10:51:00Z",
+          "duracion_estimada_dias": 2,
+          "duracion_real_horas": 48.4,
+          "justificacion_retraso": "Ninguna"
+        },
+        {
+          "id_etapa": "E_AC003_04",
+          "nombre": "Transformación/Procesamiento",
+          "participante": {
+            "id_participante": "P0014",
+            "nombre": "Industria Frutas Verdes S.A.",
+            "direccion": "Zona Industrial El Bosque, Cartagena, Bolívar",
+            "telefono": "324-535-6525",
+            "tipo_documento": "CC",
+            "identificacion": "34989627",
+            "tipo_participante": "Planta de Selección y Empaque",
+            "estado": "Activo"
+          },
+          "fecha_inicio_simulada": "2025-10-10T11:00:00Z",
+          "fecha_fin_simulada": "2025-10-17T18:10:00Z",
+          "duracion_estimada_dias": 7,
+          "duracion_real_horas": 175.2,
+          "justificacion_retraso": "Ninguna"
+        },
+        {
+          "id_etapa": "E_AC003_05",
+          "nombre": "Comercialización/Venta",
+          "participante": {
+            "id_participante": "P0015",
+            "nombre": "Verde Tropical Ltda.",
+            "direccion": "Sector La Macarena, Florencia, Caquetá",
+            "telefono": "322-101-1193",
+            "tipo_documento": "CC",
+            "identificacion": "67569824",
+            "tipo_participante": "Distribuidora Nacional",
+            "estado": "Activo"
+          },
+          "fecha_inicio_simulada": "2025-05-12T11:00:00Z",
+          "fecha_fin_simulada": "2025-05-22T19:02:00Z",
+          "duracion_estimada_dias": 10,
+          "duracion_real_horas": 248.0,
+          "justificacion_retraso": "Ninguna"
+        }
+      ]
+    },
+    {
+      "id_agrocadena": "AC004",
+      "nombre": "Agrocadena de Palma de Aceite",
+      "etapas": [
+        {
+          "id_etapa": "E_AC004_01",
+          "nombre": "Cultivo/Producción",
+          "participante": {
+            "id_participante": "P0016",
+            "nombre": "Industria Aceites Naturales S.A.",
+            "direccion": "Carrera 10 # 15-20, Medellín, Antioquia",
+            "telefono": "304-502-5284",
+            "tipo_documento": "CC",
+            "identificacion": "61645542",
+            "tipo_participante": "Plantación Palmicultora",
+            "estado": "Activo"
+          },
+          "fecha_inicio_simulada": "2025-01-16T07:00:00Z",
+          "fecha_fin_simulada": "2025-07-15T07:59:00Z",
+          "duracion_estimada_dias": 180,
+          "duracion_real_horas": 4321.0,
+          "justificacion_retraso": "Ninguna"
+        },
+        {
+          "id_etapa": "E_AC004_02",
+          "nombre": "Post-Cosecha/Recolección",
+          "participante": {
+            "id_participante": "P0017",
+            "nombre": "Extractos Vegetales Ltda.",
+            "direccion": "Plaza de Mercado Central, Ibagué, Tolima",
+            "telefono": "317-340-5351",
+            "tipo_documento": "CC",
+            "identificacion": "40066265",
+            "tipo_participante": "Centro de Beneficio",
+            "estado": "Activo"
+          },
+          "fecha_inicio_simulada": "2025-04-21T10:30:00Z",
+          "fecha_fin_simulada": "2025-05-05T16:32:00Z",
+          "duracion_estimada_dias": 14,
+          "duracion_real_horas": 342.0,
+          "justificacion_retraso": "Ninguna"
+        },
+        {
+          "id_etapa": "E_AC004_03",
+          "nombre": "Transporte/Logística",
+          "participante": {
+            "id_participante": "P0018",
+            "nombre": "Palmicultores Ltda.",
+            "direccion": "Carrera 10 # 15-20, Medellín, Antioquia",
+            "telefono": "324-800-6340",
+            "tipo_documento": "CC",
+            "identificacion": "53518059",
+            "tipo_participante": "Flota de Transporte Especializado",
+            "estado": "Activo"
+          },
+          "fecha_inicio_simulada": "2025-09-25T08:00:00Z",
+          "fecha_fin_simulada": "2025-09-27T10:28:00Z",
+          "duracion_estimada_dias": 2,
+          "duracion_real_horas": 50.5,
+          "justificacion_retraso": "Ninguna"
+        },
+        {
+          "id_etapa": "E_AC004_04",
+          "nombre": "Transformación/Procesamiento",
+          "participante": {
+            "id_participante": "P0019",
+            "nombre": "Extractos Vegetales S.A.S.",
+            "direccion": "Zona Industrial El Bosque, Cartagena, Bolívar",
+            "telefono": "314-366-2390",
+            "tipo_documento": "NIT",
+            "identificacion": "909339778-7",
+            "tipo_participante": "Extractora de Aceite",
+            "estado": "Inactivo"
+          },
+          "fecha_inicio_simulada": "2025-07-24T10:30:00Z",
+          "fecha_fin_simulada": "2025-07-31T15:15:00Z",
+          "duracion_estimada_dias": 7,
+          "duracion_real_horas": 172.8,
+          "justificacion_retraso": "Ninguna"
+        },
+        {
+          "id_etapa": "E_AC004_05",
+          "nombre": "Comercialización/Venta",
+          "participante": {
+            "id_participante": "P0020",
+            "nombre": "Palmicultores S.A.S.",
+            "direccion": "Carrera 10 # 15-20, Medellín, Antioquia",
+            "telefono": "315-524-8201",
+            "tipo_documento": "NIT",
+            "identificacion": "889407068-7",
+            "tipo_participante": "Refinadora de Aceites",
+            "estado": "Activo"
+          },
+          "fecha_inicio_simulada": "2025-07-22T07:30:00Z",
+          "fecha_fin_simulada": "2025-08-01T07:30:00Z",
+          "duracion_estimada_dias": 10,
+          "duracion_real_horas": 240.0,
+          "justificacion_retraso": "Ninguna"
+        }
+      ]
+    },
+    {
+      "id_agrocadena": "AC005",
+      "nombre": "Agrocadena de Plátano",
+      "etapas": [
+        {
+          "id_etapa": "E_AC005_01",
+          "nombre": "Cultivo/Producción",
+          "participante": {
+            "id_participante": "P0021",
+            "nombre": "COOP-Plataneros",
+            "direccion": "Avenida Santander # 12-34, Manizales, Caldas",
+            "telefono": "304-140-1883",
+            "tipo_documento": "NIT",
+            "identificacion": "864728827-7",
+            "tipo_participante": "Asociación de Plataneros",
+            "estado": "Inactivo"
+          },
+          "fecha_inicio_simulada": "2025-01-17T10:30:00Z",
+          "fecha_fin_simulada": "2025-07-16T12:34:00Z",
+          "duracion_estimada_dias": 180,
+          "duracion_real_horas": 4322.1,
+          "justificacion_retraso": "Ninguna"
+        },
+        {
+          "id_etapa": "E_AC005_02",
+          "nombre": "Post-Cosecha/Recolección",
+          "participante": {
+            "id_participante": "P0022",
+            "nombre": "Plátano Verde Ltda.",
+            "direccion": "Zona Franca Industrial, Barranquilla, Atlántico",
+            "telefono": "323-244-6800",
+            "tipo_documento": "CC",
+            "identificacion": "57128830",
+            "tipo_participante": "Empacadora Bananera",
+            "estado": "Activo"
+          },
+          "fecha_inicio_simulada": "2025-06-13T11:30:00Z",
+          "fecha_fin_simulada": "2025-06-27T15:01:00Z",
+          "duracion_estimada_dias": 14,
+          "duracion_real_horas": 339.5,
+          "justificacion_retraso": "Ninguna"
+        },
+        {
+          "id_etapa": "E_AC005_03",
+          "nombre": "Transporte/Logística",
+          "participante": {
+            "id_participante": "P0023",
+            "nombre": "Tropical Fruit S.A.S.",
+            "direccion": "Avenida Santander # 12-34, Manizales, Caldas",
+            "telefono": "321-666-9450",
+            "tipo_documento": "NIT",
+            "identificacion": "861916872-4",
+            "tipo_participante": "Naviera Comercial",
+            "estado": "Activo"
+          },
+          "fecha_inicio_simulada": "2025-05-25T07:00:00Z",
+          "fecha_fin_simulada": "2025-05-30T08:18:00Z",
+          "duracion_estimada_dias": 2,
+          "duracion_real_horas": 121.3,
+          "justificacion_retraso": "Bloqueo de vía"
+        },
+        {
+          "id_etapa": "E_AC005_04",
+          "nombre": "Transformación/Procesamiento",
+          "participante": {
+            "id_participante": "P0024",
+            "nombre": "Tropical Fruit S.A.S.",
+            "direccion": "Centro Empresarial Norte, Bogotá D.C.",
+            "telefono": "324-697-1038",
+            "tipo_documento": "CC",
+            "identificacion": "81742761",
+            "tipo_participante": "Procesadora de Plátano",
+            "estado": "Activo"
+          },
+          "fecha_inicio_simulada": "2025-02-24T11:30:00Z",
+          "fecha_fin_simulada": "2025-03-03T14:21:00Z",
+          "duracion_estimada_dias": 7,
+          "duracion_real_horas": 170.8,
+          "justificacion_retraso": "Ninguna"
+        },
+        {
+          "id_etapa": "E_AC005_05",
+          "nombre": "Comercialización/Venta",
+          "participante": {
+            "id_participante": "P0025",
+            "nombre": "Tropical Fruit Ltda.",
+            "direccion": "Carrera 10 # 15-20, Medellín, Antioquia",
+            "telefono": "323-271-9724",
+            "tipo_documento": "NIT",
+            "identificacion": "805726087-3",
+            "tipo_participante": "Comercializadora Internacional",
+            "estado": "Activo"
+          },
+          "fecha_inicio_simulada": "2025-07-13T09:00:00Z",
+          "fecha_fin_simulada": "2025-07-23T13:37:00Z",
+          "duracion_estimada_dias": 10,
+          "duracion_real_horas": 244.6,
+          "justificacion_retraso": "Ninguna"
+        }
+      ]
+    }
+  ]
+}

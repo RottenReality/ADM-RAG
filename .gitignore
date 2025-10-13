@@ -1,0 +1,15 @@
+
+pycache/
+*.pyc
+*.pyo
+*.pyd
+.venv/
+env/
+venv/
+.mypy_cache/
+.pytest_cache/
+
+.env
+.DS_Store
+
+chroma_db/
