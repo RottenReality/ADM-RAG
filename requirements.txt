@@ -4,7 +4,7 @@ llama-index-embeddings-huggingface
 llama-index-vector-stores-chroma
 
 # LLM (cambia si usas otro proveedor, ej. 'llama-index-llms-gemini')
-llama-index-llms-openai
+llama-index-llms-gemini
 
 # Base vectorial
 chromadb
