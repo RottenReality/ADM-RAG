@@ -1,5 +1,7 @@
 import json
 import os
+import re
+from typing import Optional, Dict, Any
 from dotenv import load_dotenv
 from llama_index.core import VectorStoreIndex, Settings # <-- Agregado 'Settings'
 from llama_index.core.schema import TextNode
@@ -10,6 +12,8 @@ import chromadb
 from fastapi import FastAPI
 from pydantic import BaseModel
 import uvicorn
+from llama_index.core import PromptTemplate
+from fastapi.middleware.cors import CORSMiddleware
 
 # --- CONFIGURACIÓN Y CONSTANTES ---
 load_dotenv()
@@ -75,34 +79,100 @@ index = VectorStoreIndex(
 )
 print("¡Indexación completa con Gemini y ChromaDB!")
 
+qa_prompt_template_str = (
+    "Eres un asistente experto en análisis de datos de agrocadenas.\n"
+    "Contexto de la cadena de suministro:\n"
+    "---------------------\n"
+    "{context_str}\n"
+    "---------------------\n"
+    "Basado en el contexto, responde la siguiente pregunta: {query_str}\n\n"
+    "--- INSTRUCCIONES ADICIONALES ---\n"
+    "1. Primero, escribe una respuesta textual clara y concisa.\n"
+    "2. Si la pregunta implica una comparación numérica, una distribución o datos que puedan ser visualizados en un gráfico (barras, torta, etc.), "
+    "después de tu respuesta textual, añade un separador especial '[GRAFICO_JSON]' seguido de un bloque de código JSON con los datos para el gráfico.\n"
+    "3. El JSON debe ser compatible con Chart.js y tener la siguiente estructura: { 'type': 'bar'|'pie'|'line', 'labels': [...], 'datasets': [{ 'label': '...', 'data': [...] }] }.\n"
+    "4. Si la respuesta es puramente textual y no contiene datos para un gráfico, NO incluyas el separador ni el bloque JSON.\n"
+)
+qa_prompt_template = PromptTemplate(qa_prompt_template_str)
+
 # Motor de consultas RAG
-query_engine = index.as_query_engine(similarity_top_k=10)
+query_engine = index.as_query_engine(
+    similarity_top_k=10,
+    text_qa_template=qa_prompt_template
+)
 
 # --- API ---
 
+class GraficoData(BaseModel):
+    """Define la estructura de los datos para un gráfico de Chart.js."""
+    type: str
+    labels: list[str]
+    datasets: list[Dict[str, Any]]
+
+class RespuestaRAG(BaseModel):
+    """Define la nueva estructura de la respuesta de la API."""
+    texto: str
+    grafico_data: Optional[GraficoData] = None
+    
 # Define la estructura de la solicitud
 class Consulta(BaseModel):
     pregunta: str
+
+def parsear_respuesta_llm(respuesta_llm: str) -> RespuestaRAG:
+    """
+    Busca el separador en la respuesta del LLM para separar el texto del JSON del gráfico.
+    """
+    separador = "[GRAFICO_JSON]"
+    if separador in respuesta_llm:
+        partes = respuesta_llm.split(separador, 1)
+        texto = partes[0].strip()
+        json_str = partes[1].strip()
+        
+        try:
+            if json_str.startswith("```json"):
+                json_str = json_str.replace("```json\n", "").replace("\n```", "")
+
+            grafico_data = json.loads(json_str)
+            return RespuestaRAG(texto=texto, grafico_data=grafico_data)
+        except json.JSONDecodeError:
+            # Si el JSON es inválido, devolvemos solo el texto completo
+            return RespuestaRAG(texto=respuesta_llm)
+    else:
+        # No hay gráfico, devolvemos solo el texto
+        return RespuestaRAG(texto=respuesta_llm.strip())
 
 app = FastAPI(
     title="API RAG Agrocadenas con Gemini",
     description="Backend para consultar datos de trazabilidad y optimización."
 )
 
-def consultar_rag(pregunta: str) -> str:
-    """Función que maneja la consulta al motor RAG usando el LLM de Gemini."""
-    try:
-        respuesta = query_engine.query(pregunta)
-        return str(respuesta)
-    except Exception as e:
-        return f"Error al procesar la consulta: {e}"
 
-@app.post("/consulta/")
+origins = [
+    "http://localhost:4200"
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+
+@app.post("/consulta/", response_model=RespuestaRAG)
 async def consulta_rag_api(consulta: Consulta):
-    """Endpoint para recibir una pregunta y devolver la respuesta del RAG."""
-    respuesta = consultar_rag(consulta.pregunta)
-    return {"pregunta": consulta.pregunta, "respuesta": respuesta}
-
+    """
+    Endpoint que recibe una pregunta, la procesa con el LLM y devuelve
+    una respuesta estructurada con texto y, opcionalmente, datos para un gráfico.
+    """
+    try:
+        respuesta_cruda = query_engine.query(consulta.pregunta)
+        respuesta_estructurada = parsear_respuesta_llm(str(respuesta_cruda))
+        return respuesta_estructurada
+    except Exception as e:
+        return RespuestaRAG(texto=f"Error al procesar la consulta: {e}")
+    
 # --- EJECUCIÓN ---
 if __name__ == "__main__":
     uvicorn.run(app, host="0.0.0.0", port=8000)
