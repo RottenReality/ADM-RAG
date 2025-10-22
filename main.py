@@ -6,6 +6,8 @@ from dotenv import load_dotenv
 from llama_index.core import VectorStoreIndex, Settings # <-- Agregado 'Settings'
 from llama_index.core.schema import TextNode
 from llama_index.llms.gemini import Gemini
+from llama_index.llms.groq import Groq
+from llama_index.llms.mistralai import MistralAI
 from llama_index.embeddings.huggingface import HuggingFaceEmbedding
 from llama_index.vector_stores.chroma import ChromaVectorStore
 import chromadb
@@ -52,13 +54,26 @@ print(f"Datos cargados: {len(nodos_rag)} nodos listos.")
 
 # --- INICIALIZACIÓN DE MODELOS E ÍNDICE ---
 
+def obtener_llm(llm_name: str):
+    """Devuelve la instancia del LLM según el nombre recibido."""
+    llm_name_lower = llm_name.lower()
+
+    if "gemini" in llm_name_lower:
+        return Gemini(model=llm_name, api_key=os.getenv("GEMINI_API_KEY"))
+    elif "gpt" in llm_name_lower or "openai" in llm_name_lower:
+        return Groq(model=llm_name, api_key=os.getenv("GROQ_API_KEY"))
+    elif "llama" in llm_name_lower:
+        return Groq(model=llm_name, api_key=os.getenv("GROQ_API_KEY"))
+    elif "mistral" in llm_name_lower or "mixtral" in llm_name_lower:
+        return MistralAI(model=llm_name, api_key=os.getenv("MISTRAL_API_KEY"))
+    else:
+        raise ValueError(f"Modelo LLM no soportado: {llm_name}")
+
+llm = obtener_llm("gemini-2.5-flash")
+Settings.llm = llm
+
 # Embedding
 embed_model = HuggingFaceEmbedding(model_name="BAAI/bge-small-en-v1.5") 
-
-# LLM de Gemini
-llm = Gemini(model="gemini-2.5-flash", api_key=os.getenv("GEMINI_API_KEY")) 
-
-Settings.llm = llm
 Settings.embed_model = embed_model
 
 # ChromaDB
@@ -74,10 +89,9 @@ vector_store = ChromaVectorStore(chroma_collection=chroma_collection)
 index = VectorStoreIndex(
     nodes=nodos_rag, 
     embed_model=embed_model, 
-    llm=llm,
     vector_store=vector_store
 )
-print("¡Indexación completa con Gemini y ChromaDB!")
+print("¡Indexación completa con LLM y ChromaDB!")
 
 qa_prompt_template_str = (
     "Eres un asistente experto en análisis de datos de agrocadenas.\n"
@@ -117,6 +131,7 @@ class RespuestaRAG(BaseModel):
 # Define la estructura de la solicitud
 class Consulta(BaseModel):
     pregunta: str
+    llm_name: str = "gemini-2.5-flash"
 
 def parsear_respuesta_llm(respuesta_llm: str) -> RespuestaRAG:
     """
@@ -167,6 +182,9 @@ async def consulta_rag_api(consulta: Consulta):
     una respuesta estructurada con texto y, opcionalmente, datos para un gráfico.
     """
     try:
+        if consulta.llm_name:
+            Settings.llm = obtener_llm(consulta.llm_name)
+
         respuesta_cruda = query_engine.query(consulta.pregunta)
         respuesta_estructurada = parsear_respuesta_llm(str(respuesta_cruda))
         return respuesta_estructurada

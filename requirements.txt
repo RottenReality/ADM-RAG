@@ -5,6 +5,8 @@ llama-index-vector-stores-chroma
 
 # LLM (cambia si usas otro proveedor, ej. 'llama-index-llms-gemini')
 llama-index-llms-gemini
+llama-index-llms-mistralai
+llama-index-llms-groq
 
 # Base vectorial
 chromadb
