@@ -1,7 +1,7 @@
 import json
 import os
 import re
-from typing import Optional, Dict, Any
+from typing import Optional, Dict, Any, List
 from dotenv import load_dotenv
 from llama_index.core import VectorStoreIndex, Settings # <-- Agregado 'Settings'
 from llama_index.core.schema import TextNode
@@ -64,8 +64,8 @@ def obtener_llm(llm_name: str):
         return Groq(model=llm_name, api_key=os.getenv("GROQ_API_KEY"))
     elif "llama" in llm_name_lower:
         return Groq(model=llm_name, api_key=os.getenv("GROQ_API_KEY"))
-    elif "mistral" in llm_name_lower or "mixtral" in llm_name_lower:
-        return MistralAI(model=llm_name, api_key=os.getenv("MISTRAL_API_KEY"))
+    elif "moonshotai" in llm_name_lower or "kimi" in llm_name_lower:
+        return Groq(model=llm_name, api_key=os.getenv("GROQ_API_KEY"))
     else:
         raise ValueError(f"Modelo LLM no soportado: {llm_name}")
 
@@ -79,7 +79,6 @@ Settings.embed_model = embed_model
 # ChromaDB
 print("Inicializando ChromaDB...")
 chroma_client = chromadb.PersistentClient(path=CHROMA_PATH)
-# Usamos el método corregido, sin pasar el embed_model a Chroma
 chroma_collection = chroma_client.get_or_create_collection(COLLECTION_NAME)
 
 # Crear el Índice RAG
@@ -95,18 +94,34 @@ print("¡Indexación completa con LLM y ChromaDB!")
 
 qa_prompt_template_str = (
     "Eres un asistente experto en análisis de datos de agrocadenas.\n"
+    "Tu tarea es analizar información sobre procesos productivos y responder preguntas con precisión y estructura clara.\n\n"
     "Contexto de la cadena de suministro:\n"
     "---------------------\n"
     "{context_str}\n"
     "---------------------\n"
-    "Basado en el contexto, responde la siguiente pregunta: {query_str}\n\n"
-    "--- INSTRUCCIONES ADICIONALES ---\n"
-    "1. Primero, escribe una respuesta textual clara y concisa.\n"
-    "2. Si la pregunta implica una comparación numérica, una distribución o datos que puedan ser visualizados en un gráfico (barras, torta, etc.), "
-    "después de tu respuesta textual, añade un separador especial '[GRAFICO_JSON]' seguido de un bloque de código JSON con los datos para el gráfico.\n"
-    "3. El JSON debe ser compatible con Chart.js y tener la siguiente estructura: { 'type': 'bar'|'pie'|'line', 'labels': [...], 'datasets': [{ 'label': '...', 'data': [...] }] }.\n"
-    "4. Si la respuesta es puramente textual y no contiene datos para un gráfico, NO incluyas el separador ni el bloque JSON.\n"
+    "Pregunta del usuario: {query_str}\n\n"
+    "--- INSTRUCCIONES DE FORMATO ---\n"
+    "1. Comienza SIEMPRE con una respuesta textual clara, concisa y en lenguaje natural. No uses listas numeradas ni viñetas innecesarias si no aportan al análisis.\n"
+    "2. Si la pregunta involucra valores numéricos, comparaciones, distribuciones o cualquier información que pueda representarse visualmente "
+    "(por ejemplo: tiempos, porcentajes, cantidades, etapas, etc.), DEBES incluir un bloque de gráfico.\n"
+    "3. Para incluir el gráfico, escribe un salto de línea y luego el separador exacto:\n"
+    "   [GRAFICO_JSON]\n"
+    "   En la línea siguiente, coloca un bloque de código JSON **válido y bien formado**, sin texto adicional ni comentarios.\n"
+    "4. El JSON debe seguir este formato y ser compatible con Chart.js:\n"
+    "   {\n"
+    "       'type': 'bar'|'pie'|'line',\n"
+    "       'labels': ['etiqueta1', 'etiqueta2', ...],\n"
+    "       'datasets': [\n"
+    "           { 'label': 'Nombre del conjunto de datos', 'data': [valor1, valor2, ...] }\n"
+    "       ]\n"
+    "   }\n"
+    "5. Si la respuesta es puramente textual (no hay datos cuantitativos o comparativos), **NO** incluyas el separador ni el JSON.\n"
+    "6. No incluyas tablas Markdown, HTML ni código adicional fuera del JSON del gráfico.\n"
+    "7. Asegúrate de que los valores en el JSON coincidan con los números mencionados en tu respuesta textual.\n"
+    "8. En el bloque JSON usa siempre comillas dobles (\") válidas para JSON estándar."
 )
+
+
 qa_prompt_template = PromptTemplate(qa_prompt_template_str)
 
 # Motor de consultas RAG
@@ -128,7 +143,6 @@ class RespuestaRAG(BaseModel):
     texto: str
     grafico_data: Optional[GraficoData] = None
     
-# Define la estructura de la solicitud
 class Consulta(BaseModel):
     pregunta: str
     llm_name: str = "gemini-2.5-flash"
@@ -136,25 +150,50 @@ class Consulta(BaseModel):
 def parsear_respuesta_llm(respuesta_llm: str) -> RespuestaRAG:
     """
     Busca el separador en la respuesta del LLM para separar el texto del JSON del gráfico.
+    Incluye validaciones robustas y tolerancia a formatos mal formados (especialmente en Llama/Mistral).
     """
     separador = "[GRAFICO_JSON]"
-    if separador in respuesta_llm:
-        partes = respuesta_llm.split(separador, 1)
-        texto = partes[0].strip()
-        json_str = partes[1].strip()
-        
-        try:
-            if json_str.startswith("```json"):
-                json_str = json_str.replace("```json\n", "").replace("\n```", "")
-
-            grafico_data = json.loads(json_str)
-            return RespuestaRAG(texto=texto, grafico_data=grafico_data)
-        except json.JSONDecodeError:
-            # Si el JSON es inválido, devolvemos solo el texto completo
-            return RespuestaRAG(texto=respuesta_llm)
-    else:
-        # No hay gráfico, devolvemos solo el texto
+    if separador not in respuesta_llm:
         return RespuestaRAG(texto=respuesta_llm.strip())
+
+    partes = respuesta_llm.split(separador, 1)
+    texto = partes[0].strip()
+    json_str = partes[1].strip()
+
+    json_str = json_str.replace("```json", "").replace("```", "").strip()
+    json_str = json_str.replace("’", "'").replace("‘", "'").replace("“", '"').replace("”", '"')
+
+    if "'" in json_str and '"' not in json_str:
+        json_str = json_str.replace("'", '"')
+
+    match = re.search(r'(\{.*\}|\[.*\])', json_str, re.DOTALL)
+    if match:
+        json_str = match.group(1)
+
+    try:
+        grafico_data = json.loads(json_str)
+
+        if not isinstance(grafico_data, dict) or \
+           "labels" not in grafico_data or \
+           "datasets" not in grafico_data:
+            return RespuestaRAG(texto=texto + "\n\n⚠️ El gráfico no se pudo interpretar correctamente.")
+
+        return RespuestaRAG(texto=texto, grafico_data=grafico_data)
+
+    except json.JSONDecodeError as e:
+        json_str_reparado = re.sub(r",\s*([\]}])", r"\1", json_str)
+        try:
+            grafico_data = json.loads(json_str_reparado)
+            if "labels" in grafico_data and "datasets" in grafico_data:
+                return RespuestaRAG(texto=texto, grafico_data=grafico_data)
+        except Exception:
+            pass
+        return RespuestaRAG(texto=texto + "\n\n⚠️ El gráfico no se pudo interpretar correctamente.")
+
+    except Exception as e:
+        return RespuestaRAG(texto=f"{texto}\n\n⚠️ Error al interpretar gráfico: {e}")
+
+
 
 app = FastAPI(
     title="API RAG Agrocadenas con Gemini",
@@ -185,12 +224,50 @@ async def consulta_rag_api(consulta: Consulta):
         if consulta.llm_name:
             Settings.llm = obtener_llm(consulta.llm_name)
 
+        print(f"🧠 Usando modelo: {Settings.llm.__class__.__name__} ({consulta.llm_name})")
+
         respuesta_cruda = query_engine.query(consulta.pregunta)
         respuesta_estructurada = parsear_respuesta_llm(str(respuesta_cruda))
         return respuesta_estructurada
     except Exception as e:
         return RespuestaRAG(texto=f"Error al procesar la consulta: {e}")
-    
+
+@app.post("/comparar/", response_model=List[RespuestaRAG])
+async def comparar_llms(consulta: Consulta):
+    """
+    Ejecuta la misma pregunta en los 4 modelos y devuelve todas las respuestas.
+    """
+    modelos = [
+        "gemini-2.5-flash",
+        "openai/gpt-oss-120b",
+        "meta-llama/llama-4-maverick-17b-128e-instruct",
+        "moonshotai/kimi-k2-instruct"
+    ]
+    respuestas = []
+
+    for modelo in modelos:
+        try:
+            llm_actual = obtener_llm(modelo)
+            query_engine_temp = index.as_query_engine(
+                llm=llm_actual,
+                similarity_top_k=10,
+                text_qa_template=qa_prompt_template
+            )
+
+            print(f"🤖 Consultando con {modelo}...")
+            respuesta_cruda = query_engine_temp.query(consulta.pregunta)
+
+            respuesta_estructurada = parsear_respuesta_llm(str(respuesta_cruda))
+            respuesta_estructurada.texto = f"[{modelo}] {respuesta_estructurada.texto}"
+            respuestas.append(respuesta_estructurada)
+
+        except Exception as e:
+            respuestas.append(
+                RespuestaRAG(texto=f"[{modelo}] ⚠️ Error: {e}")
+            )
+
+    return respuestas
+
 # --- EJECUCIÓN ---
 if __name__ == "__main__":
     uvicorn.run(app, host="0.0.0.0", port=8000)
